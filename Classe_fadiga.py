@@ -1,13 +1,15 @@
 # -*- coding: utf-8 -*-
 """
 Created on Mon Oct 18 17:38:59 2021
+Version __0.0.1__
 
 @author: Arthur Chabole
+Classe Material para calcular resistência a fadiga corrigido e outras propriedades do material. [em desenvolvimento]
 """
 import numpy as np
 import pandas as pd
 
-class S_fadiga():
+class Material():
     def __init__(self, material,
                  Sult, 
                  HB=None, 
@@ -54,7 +56,10 @@ class S_fadiga():
         self.c = c
         self.d = d
         self.T = T
-
+        
+        #Dados dos materiais
+        self.Carga = {'flexão':0.9, 'normal':0.75, 'torção':0.72}
+        
         #Estimar Limite de resistência a fadiga (Sf)
         self.Sf = self.__Sf()
         
@@ -116,7 +121,7 @@ class S_fadiga():
             57 horas
 
         '''
-        self.Carga = {'flexão':0.9, 'normal':0.75, 'torção':0.72}
+        
         
         #Convertendo de Mpa pra Ksi
         #S'ut
@@ -154,10 +159,10 @@ class S_fadiga():
 
         '''
         if correção:
-            b = - np.log10((self.Sult/self.S_f)**(1/3))
+            b = - np.log10((self.Sult*self.Carga[self.kind]/self.S_f)**(1/3))
         else:
-            b = - np.log10((self.Sult/self.Sf)**(1/3))
-        a = 10**(np.log10(self.Sult) - 3*b) 
+            b = - np.log10((self.Sult*self.Carga[self.kind]/self.Sf)**(1/3))
+        a = 10**(np.log10(self.Sult*self.Carga[self.kind]) - 3*b) 
         sigma = a*(N**b)
         return sigma
     
@@ -259,16 +264,7 @@ class S_fadiga():
         Ke = 1 - (0.0058*(self.T-450))
       return Ke
         
-#---------------------  CÓDIGO AQUI ------------------------
 
-'''
-print(f'Resistência a tração {A.Sult} Mpa')
-print(f'Resistência a fadiga {A.Sf} Mpa')
-print(f'Resistência a fadiga corrigido {A.S_f:.2f} Mpa')
-#print(f'Resistência a fadiga corrigido {A.S_f/6.89476} Mpa')
-#A.to_excel('D:/UNESP/PythonImagineers/arquivo.xlsx')
-'''
- 
     
  
     

@@ -23,9 +23,9 @@ ax.set(title='Diagrama S-N',
 #Com correção de resistência a fadiga
 for superf in (Superficies):
     
-    Mat = fd.S_fadiga('aço', Sult=500,
+    Mat = fd.Material('aço', Sult=600,
                 kind='flexão', acabamento=superf,
-                c='90', d=25)
+                c='99', d=25)
     
     sigma = Mat.diagrama_SN(ciclos)
     
