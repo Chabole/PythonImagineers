@@ -19,15 +19,14 @@ ax.set(title='Diagrama S-N',
        xlabel=r'Ciclos [$N$]', ylabel=r'Tensão $\sigma$')
 
 #Plotando pra diferentes acabamentos
-
 #Com correção de resistência a fadiga
 for superf in (Superficies):
-    
     Mat = fd.Material('aço', Sult=600,
                 kind='flexão', acabamento=superf,
                 c='99', d=25)
     
     sigma = Mat.diagrama_SN(ciclos)
+    #print(f'Acabamento={Mat.acabamento} e Ciclos={Mat.ciclos_ToFalha(300)}')
     
     ax.scatter(ciclos, sigma)
     ax.plot(ciclos, sigma, label=f'{Mat.acabamento} e '  + r"$S_f'$=" + f'{Mat.S_f:.0f}Mpa')
@@ -40,9 +39,9 @@ ax.plot(ciclos, sigma, '--', label='sem correção')
 #Deixando bonito
 ax.set_xscale('log')
 ax.set_yscale('log')
-#ax.set_ylim(4E2, 1E3)
+ax.set_ylim(0.9E2, 1E3)
 ax.set_xlim(1E+3, 1E8)
 ax.legend()
 ax.grid(linestyle='dotted')
 
-fig.savefig('D:/UNESP/PythonImagineers/diagrama_SN.pdf')
+#fig.savefig('D:/UNESP/PythonImagineers/diagrama_SN.pdf')

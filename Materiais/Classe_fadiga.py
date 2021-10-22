@@ -6,10 +6,12 @@ Version __0.0.1__
 @author: Arthur Chabole
 Classe Material para calcular resistência a fadiga corrigido e outras propriedades do material. [em desenvolvimento]
 """
+
 import numpy as np
 import pandas as pd
 
 class Material():
+    
     def __init__(self, material,
                  Sult, 
                  HB=None, 
@@ -64,18 +66,14 @@ class Material():
         self.Sf = self.__Sf()
         
         #Estimar Limite de resistência a fadiga corrigido (S'f)
-        self.S_f = self.Sf_corrigido()
-    
-    @property
-    def K(self):
-        print(f'Ka {self.__Ka[self.kind]}')
-        print(f'Kb {self.__Kb()}')
-        print(f'Kc {self.__Kc()}')
-        print(f'Kd {self.__Kd[self.c]}')
-        print(f'Ke {self.__Ke()}')
-  
+        self.S_f = self.Sf_corrigido
+        
+        #Coeficientes
+        self.b_corr = - np.log10((self.Sult*self.Carga[self.kind]/self.S_f)**(1/3))
+        self.b_ncorr = - np.log10((self.Sult*self.Carga[self.kind]/self.Sf)**(1/3))
         
     #Estimar Limite de resistência a fadiga corrigido (S'f)
+    @property
     def Sf_corrigido(self):
           self.__Ka = {'flexão':1, 'normal':0.70, 'torção':0.557}
           self.__Kd = {'50':1, '90':0.897, '95':0.868, '99':0.814, '99.9':0.753, '99.99':0.702, '99.999':0.659, '99.9999':0.620}
@@ -121,11 +119,10 @@ class Material():
             57 horas
 
         '''
-        
-        
         #Convertendo de Mpa pra Ksi
         #S'ut
         S_ult = (self.Carga[self.kind]*self.Sult/6.89476)*1000
+        
         #S'f
         S_f = (self.S_f/6.89476)*1000
         
@@ -142,10 +139,10 @@ class Material():
         ciclos_totais = 1/acum
         return ciclos_totais
     
-    def ciclos(self, N, correção=True):
+    def tensão_ToFalha(self, N, correção=True):
         '''
         
-        Cálcula a tensão dado um numero de ciclos. 
+        Cálcula a tensão máxima de trabalho dado um número de ciclos. 
 
         Parameters
         ----------
@@ -155,17 +152,38 @@ class Material():
         Returns
         -------
         sigma : float or array
-            Tensão.
+            Tensão máxima de trabalho.
 
         '''
         if correção:
-            b = - np.log10((self.Sult*self.Carga[self.kind]/self.S_f)**(1/3))
+            b = self.b_corr
         else:
-            b = - np.log10((self.Sult*self.Carga[self.kind]/self.Sf)**(1/3))
+            b = self.b_ncorr
+            
         a = 10**(np.log10(self.Sult*self.Carga[self.kind]) - 3*b) 
         sigma = a*(N**b)
         return sigma
     
+    def ciclos_ToFalha(self, sigma):
+        '''
+        
+        Calcula o número de ciclos até a falha por fadiga do material dado a tensão de trabalho.
+
+        Parameters
+        ----------
+        sigma : float or array
+            Tensão de trabalho.
+
+        Returns
+        -------
+        ciclos : float
+            Número de ciclos minimos até a falha por fadiga.
+
+        '''
+        a = 10**(np.log10(self.Sult*self.Carga[self.kind]) - 3*self.b_corr) 
+        ciclos = (sigma/a)**(1/self.b_corr)
+        return ciclos
+            
     def diagrama_SN(self, ciclos, limite_fadiga= 1E+6, correção=True):
         '''
         Calcula o diagrama S-N do material.
@@ -191,10 +209,10 @@ class Material():
                 else:
                     sigma.append(self.Sf) #S_f
             else:
-                sigma.append(self.ciclos(N, correção))
+                sigma.append(self.tensão_ToFalha(N, correção))
         return sigma
     
-    def to_excel(self, local=None):
+    def info(self, local=None):
           tabela=[]
           tabela.append({
               
@@ -263,10 +281,5 @@ class Material():
       if (self.T > 450) and (self.T <= 550):
         Ke = 1 - (0.0058*(self.T-450))
       return Ke
-        
 
-    
- 
-    
- 
-    
+
