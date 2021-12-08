@@ -33,3 +33,6 @@ class Aluno(Pessoa):
 
     def bug_2(self):
         print('Isso aqui é um bug! Tira na versão futura.')
+
+    def bug_3(self):
+        print('Isso aqui é um bug! Tira na versão futura.')
