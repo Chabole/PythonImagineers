@@ -79,13 +79,13 @@ class Material():
           self.__Kd = {'50':1, '90':0.897, '95':0.868, '99':0.814, '99.9':0.753, '99.99':0.702, '99.999':0.659, '99.9999':0.620}
           
           #Calculando os K's
-          Ka = self.__Ka[self.kind]
-          Kb = self.__Kb()
-          Kc = self.__Kc()
-          Kd = self.__Kd[self.c]
-          Ke = self.__Ke()
+          self.Ka = self.__Ka[self.kind]
+          self.Kb = self.__Kb()
+          self.Kc = self.__Kc()
+          self.Kd = self.__Kd[self.c]
+          self.Ke = self.__Ke()
 
-          return Ka*Kb*Kc*Kd*Ke*self.Sf
+          return self.Ka*self.Kb*self.Kc*self.Kd*self.Ke*self.Sf
       
     def regra_Miner(self, ciclo_sigma):
         '''
