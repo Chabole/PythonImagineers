@@ -2,7 +2,11 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 class teste:
-    pass
+        def __init__(self, nome, idade):
+        self.nome = nome
+        self.idade = idade
+
+
 
 
 
