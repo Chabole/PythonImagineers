@@ -24,3 +24,6 @@ class Aluno(Pessoa):
     
     def apresentar(self):
         print(f'Meu nome é {self.nome} tenho {self.idade} e faço {self.curso}') 
+    
+    def fazer_curso(self):
+        print(f'Eu faço {self.curso}')
