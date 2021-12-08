@@ -1,11 +1,11 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-def seno(x):
-    return np.sin(x)
+class teste:
+    pass
 
-def cosseno(x):
-    return np.cos(x)
 
+
+        
 
 
