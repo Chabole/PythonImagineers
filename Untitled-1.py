@@ -27,3 +27,6 @@ class Aluno(Pessoa):
     
     def fazer_curso(self):
         print(f'Eu faço {self.curso}')
+    
+    def bug(self):
+        print('Isso aqui é um bug! Tira na versão futura.')
