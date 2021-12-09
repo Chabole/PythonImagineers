@@ -27,6 +27,9 @@ class Aluno(Pessoa):
     
     def fazer_curso(self):
         print(f'Eu faço {self.curso}')
+
+    def tipos_curso(self):
+        print(f'"Enfermagem, engenharia, biologia e matemática"')
     
     def bug(self):
         print('Isso aqui é um bug! Tira na versão futura.')
