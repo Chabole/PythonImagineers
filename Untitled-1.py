@@ -15,3 +15,15 @@ class Pessoa:
   
 objects = Pessoa('Arthur', 22)
 print('Done!')
+
+class Aluno(Pessoa):
+    def __init__(self, nome, idade, curso):
+        self.nome = nome
+        self.idade = idade
+        self.curso = curso
+    
+    def apresentar(self):
+        print(f'Meu nome é {self.nome} tenho {self.idade} e faço {self.curso}') 
+    
+    def fazer_curso(self):
+        print(f'Eu faço {self.curso}')
